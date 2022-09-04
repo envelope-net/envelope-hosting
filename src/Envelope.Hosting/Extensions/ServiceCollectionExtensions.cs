@@ -10,7 +10,8 @@ public static partial class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddHostApplicationContext(
 		this IServiceCollection services,
-		string systemName)
+		string systemName,
+		Func<EnvelopePrincipal?>? principalGetter)
 	{
 		services.TryAddScoped<IApplicationContext>(sp =>
 		{
@@ -19,6 +20,7 @@ public static partial class ServiceCollectionExtensions
 				new TraceInfoBuilder(systemName, traceFrame, null)
 					.CorrelationId(Guid.NewGuid())
 					.ExternalCorrelationId(Guid.NewGuid().ToString("D"))
+					.Principal(principalGetter != null ? principalGetter() : null)
 					.Build();
 
 			var appResources = sp.GetRequiredService<IApplicationResources>();
