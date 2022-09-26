@@ -12,10 +12,7 @@ public static class ServiceProviderServiceExtensions
 
 		var startupTasks = serviceProvider.GetServices<IStartupTask>();
 
-		using var scope = serviceProvider.CreateScope();
-		var sp = scope.ServiceProvider;
-
 		foreach (var startupTask in startupTasks)
-			await startupTask.ExecuteAsync(sp, cancellationToken);
+			await startupTask.ExecuteAsync(serviceProvider, cancellationToken);
 	}
 }
